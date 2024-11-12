@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Setting Values Using Sliders</title>
+
+	<style>
+
+        *{
+            padding:0;
+            margin:0;
+            box-sizing:border-box;
+            text-transform: uppercase;
+        }
+
+		:root {
+			--charge: 0;
+			--power: 0;
+			--font-size: 90px;
+			--letter-spacing: 3px;
+            --line-height: 90px;
+            --background-color: #ffffff; /* Default background color */
+            --text-color: #000000; /* Default text color */
+		}
+		@font-face {
+			font-family: "Flares";
+			src:url(FlaresVF.ttf);
+		}
+		
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: "Flares", sans-serif;
+        }
+
+        .nav {
+            display:grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 20px;
+            margin: 10px;
+        }
+        
+        .nav-slider{
+            height: 40px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .flares {
+            width: 90%;   /* Set the content to take up most of the space */
+            height: 90%;  /* Make it responsive to the parent div */
+            padding: 20px;
+            overflow: auto;
+            resize: both; /* Allow resizing */
+            outline: none;
+            white-space: pre-wrap; /* Ensure text wraps correctly */
+            text-transform:uppercase;
+            hyphens: auto;
+        }
+
+        .centered-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: none;
+        }
+
+        .flares {
+			font-family: "Flares", sans-serif;
+			font-variation-settings: "SHAP" var(--shape), "FLRS" var(--flares);
+			font-size: var(--font-size);
+			letter-spacing: var(--letter-spacing);
+            line-height: var(--line-height);
+		}
+
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90vw;
+            height: 15vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 20px;
+  
+        }
+
+        .color-picker {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .color-picker input[type="range"] {
+            width: 80%;
+        }
+
+        .color-picker label {
+            margin-bottom: 5px;
+        }
+
+	</style>
+</head>
+
+<body>
+    <div class="nav">
+        <div class="nav-slider">
+            <h2>Font size</h2>
+            <label for="font-size">Current value: <span id="current-font-size">90</span>px</label>
+            <input name="font-size" type="range" min="1" max="300" value="90" oninput="setFontSize(this.value)">
+        </div>
+
+        <div class="nav-slider">
+            <h2>Letter spacing</h2>
+            <label for="letter-spacing">Current value: <span id="current-letter-spacing">3</span>px</label>
+            <input name="letter-spacing" type="range" min="-5" max="50" value="3" oninput="setLetterSpacing(this.value)">
+        </div>
+
+        <div class="nav-slider">
+            <h2>Line Height</h2>
+            <label for="line-height">Current value: <span id="current-line-height">90</span>px</label>
+            <input name="line-height" type="range" min="10" max="300" value="90" oninput="setLineHeight(this.value)">
+        </div>
+    </div>
+
+    <div class="centered-container">
+        <p class="flares" contenteditable="plaintext-only">Flares is a variable display typeface designed by Tony Zhao, inspired by light traps used for subtitles on old TV screens.</p>
+    </div>
+
+    <!-- Bottom bar for controlling colors -->
+    <div class="bottom-bar">
+        <!-- Left column: background color -->
+        <div class="color-picker">
+            <label for="background-color">Background Color</label>
+            <input type="color" id="background-color" oninput="setBackgroundColor(this.value)" value="#ffffff">
+        </div>
+
+        <!-- Right column: text color -->
+        <div class="color-picker">
+            <label for="text-color">Text Color</label>
+            <input type="color" id="text-color" oninput="setTextColor(this.value)" value="#000000">
+        </div>
+    </div>
+
+	<script>
+		// Element that contains our CSS variables
+		var root = document.querySelector('html');
+
+		// Change the font-size CSS variable
+		var currentFontSize = document.querySelector('#current-font-size');
+		function setFontSize(newFontSize) {
+			currentFontSize.innerText = newFontSize;
+			root.style.setProperty('--font-size', newFontSize + "px"); // Set the font size
+		}
+
+		// Change the letter-spacing CSS variable
+		var currentLetterSpacing = document.querySelector('#current-letter-spacing');
+		function setLetterSpacing(newLetterSpacing) {
+            currentLetterSpacing.innerText = newLetterSpacing;
+            root.style.setProperty('--letter-spacing', newLetterSpacing + "px"); // Set the letter-spacing
+		}
+
+        // Change the line-height CSS variable
+        var currentLineHeight = document.querySelector('#current-line-height');
+		function setLineHeight(newLineHeight) {
+            currentLineHeight.innerText = newLineHeight;
+            root.style.setProperty('--line-height', newLineHeight+ "px"); // Set the line-height
+		}
+
+        // Change background color
+        function setBackgroundColor(newColor) {
+            root.style.setProperty('--background-color', newColor); // Set the background color
+        }
+
+        // Change text color
+        function setTextColor(newColor) {
+            root.style.setProperty('--text-color', newColor); // Set the text color
+        }
+
+        // Track cursor position and adjust font variation settings
+        window.addEventListener("mousemove", function(event) {
+            var x = event.clientX;
+            var y = event.clientY;
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+
+            // Calculate the distance from the center (both horizontally and vertically)
+            var xDistance = Math.abs(x - width / 2);
+            var yDistance = Math.abs(y - height / 2);
+
+            // Normalize FLRS and SHAP values:
+            // FLRS (horizontal): 0 at the left edge, 1000 at the center, 0 at the right edge
+            var flrsValue = Math.max(0, Math.min(1000, (1 - (xDistance / (width / 2))) * 1000));
+
+            // SHAP (vertical): 0 at the top edge, 1000 at the center, 0 at the bottom edge
+            var shapValue = Math.max(0, Math.min(1000, (1 - (yDistance / (height / 2))) * 1000));
+
+            // Apply the font variation settings based on the calculated values
+            root.style.setProperty('--flares', flrsValue);
+            root.style.setProperty('--shape', shapValue);
+        });
+	</script>
+</body>
+</html>
+
+
