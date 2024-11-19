@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Setting Values Using Sliders</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setting Values Using Sliders</title>
 
-	<style>
-
-        *{
-            padding:0;
-            margin:0;
-            box-sizing:border-box;
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
             text-transform: uppercase;
         }
 
-		:root {
-			--charge: 0;
-			--power: 0;
-			--font-size: 90px;
-			--letter-spacing: 3px;
+        :root {
+            --charge: 0;
+            --power: 0;
+            --font-size: 90px;
+            --letter-spacing: 3px;
             --line-height: 90px;
             --background-color: #ffffff; /* Default background color */
             --text-color: #000000; /* Default text color */
-		}
-		@font-face {
-			font-family: "Flares";
-			src:url(FlaresVF.ttf);
-		}
-		
+        }
+
+        @font-face {
+            font-family: "Flares";
+            src: url(FlaresVF.ttf);
+        }
+
         body {
             background-color: var(--background-color);
             color: var(--text-color);
@@ -35,30 +35,41 @@
         }
 
         .nav {
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            display: flex;
+            justify-content: space-around;  /* Center the sliders and labels horizontally */
             padding: 20px;
             margin: 10px;
         }
-        
-        .nav-slider{
-            height: 40px;
-            padding: 10px;
+
+        .nav-slider {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
             margin: 10px;
+            width: 30%;  /* Adjust width of each slider section */
         }
 
         .flares {
-            width: 90%;   /* Set the content to take up most of the space */
-            height: 90%;  /* Make it responsive to the parent div */
+            width: 90%;
+            height: 90%;
             padding: 20px;
             overflow: auto;
-            resize: both; /* Allow resizing */
+            resize: both;
             outline: none;
-            white-space: pre-wrap; /* Ensure text wraps correctly */
-            text-transform:uppercase;
+            white-space: pre-wrap;
+            text-transform: uppercase;
             hyphens: auto;
+            font-family: "Flares", sans-serif;
+            font-variation-settings: "SHAP" var(--shape), "FLRS" var(--flares);
+            font-size: var(--font-size);
+            letter-spacing: var(--letter-spacing);
+            line-height: var(--line-height);
+            scrollbar-width: thin;
+            scrollbar-color: var(--background-color) var(--text-color);
         }
 
+        /* Center the content */
         .centered-container {
             position: absolute;
             top: 50%;
@@ -69,17 +80,72 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: none;
+            overflow: hidden;
         }
 
-        .flares {
-			font-family: "Flares", sans-serif;
-			font-variation-settings: "SHAP" var(--shape), "FLRS" var(--flares);
-			font-size: var(--font-size);
-			letter-spacing: var(--letter-spacing);
-            line-height: var(--line-height);
-		}
+        /* Range Slider Styles */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 2px;
+            background-color: transparent;
+            cursor: pointer;
+        }
 
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-color);
+            border-radius: 5px;
+        }
+
+        input[type="range"]::-moz-range-track {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-color);
+            border-radius: 5px;
+        }
+
+        input[type="range"]::-ms-track {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-color);
+            border-radius: 5px;
+            border: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            margin-top: -5px;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-ms-thumb {
+            width: 12px;
+            height: 12px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Bottom bar for controlling colors */
         .bottom-bar {
             position: absolute;
             bottom: 0;
@@ -91,7 +157,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             padding: 20px;
-  
         }
 
         .color-picker {
@@ -109,26 +174,26 @@
             margin-bottom: 5px;
         }
 
-	</style>
+    </style>
 </head>
 
 <body>
     <div class="nav">
         <div class="nav-slider">
             <h2>Font size</h2>
-            <label for="font-size">Current value: <span id="current-font-size">90</span>px</label>
+            <label for="font-size">Current value: <span id="current-font-size">90</span>px</label><br>
             <input name="font-size" type="range" min="1" max="300" value="90" oninput="setFontSize(this.value)">
         </div>
 
         <div class="nav-slider">
             <h2>Letter spacing</h2>
-            <label for="letter-spacing">Current value: <span id="current-letter-spacing">3</span>px</label>
+            <label for="letter-spacing">Current value: <span id="current-letter-spacing">3</span>px</label><br>
             <input name="letter-spacing" type="range" min="-5" max="50" value="3" oninput="setLetterSpacing(this.value)">
         </div>
 
         <div class="nav-slider">
             <h2>Line Height</h2>
-            <label for="line-height">Current value: <span id="current-line-height">90</span>px</label>
+            <label for="line-height">Current value: <span id="current-line-height">90</span>px</label><br>
             <input name="line-height" type="range" min="10" max="300" value="90" oninput="setLineHeight(this.value)">
         </div>
     </div>
@@ -152,30 +217,30 @@
         </div>
     </div>
 
-	<script>
-		// Element that contains our CSS variables
-		var root = document.querySelector('html');
+    <script>
+        // Element that contains our CSS variables
+        var root = document.querySelector('html');
 
-		// Change the font-size CSS variable
-		var currentFontSize = document.querySelector('#current-font-size');
-		function setFontSize(newFontSize) {
-			currentFontSize.innerText = newFontSize;
-			root.style.setProperty('--font-size', newFontSize + "px"); // Set the font size
-		}
+        // Change the font-size CSS variable
+        var currentFontSize = document.querySelector('#current-font-size');
+        function setFontSize(newFontSize) {
+            currentFontSize.innerText = newFontSize;
+            root.style.setProperty('--font-size', newFontSize + "px"); // Set the font size
+        }
 
-		// Change the letter-spacing CSS variable
-		var currentLetterSpacing = document.querySelector('#current-letter-spacing');
-		function setLetterSpacing(newLetterSpacing) {
+        // Change the letter-spacing CSS variable
+        var currentLetterSpacing = document.querySelector('#current-letter-spacing');
+        function setLetterSpacing(newLetterSpacing) {
             currentLetterSpacing.innerText = newLetterSpacing;
             root.style.setProperty('--letter-spacing', newLetterSpacing + "px"); // Set the letter-spacing
-		}
+        }
 
         // Change the line-height CSS variable
         var currentLineHeight = document.querySelector('#current-line-height');
-		function setLineHeight(newLineHeight) {
+        function setLineHeight(newLineHeight) {
             currentLineHeight.innerText = newLineHeight;
             root.style.setProperty('--line-height', newLineHeight+ "px"); // Set the line-height
-		}
+        }
 
         // Change background color
         function setBackgroundColor(newColor) {
@@ -186,8 +251,6 @@
         function setTextColor(newColor) {
             root.style.setProperty('--text-color', newColor); // Set the text color
         }
-
-        // Track cursor position and adjust font variation settings
         window.addEventListener("mousemove", function(event) {
             var x = event.clientX;
             var y = event.clientY;
@@ -209,8 +272,6 @@
             root.style.setProperty('--flares', flrsValue);
             root.style.setProperty('--shape', shapValue);
         });
-	</script>
+    </script>
 </body>
 </html>
-
-
